@@ -21,7 +21,7 @@ const Dashboard = () => {
       <CommandPalette />
       <AddTaskDialog open={addOpen} onOpenChange={setAddOpen} />
 
-      {/* Header */}
+      {/* Header or buttonsbar*/}
       <header className="border-b border-border/50 backdrop-blur-xl bg-background/80 sticky top-0 z-40">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -36,6 +36,14 @@ const Dashboard = () => {
             >
               <Plus className="w-4 h-4" />
             </button>
+            <button
+            onClick={freshStart}
+            className="px-2 py-2 rounded-xl bg-muted flex self-end text-muted-foreground hover:text-destructive transition-colors"
+            title="Fresh Start Protocol"
+          >
+            {/* <RotateCcw className="w-4 h-4" /> */}
+            Sign Out
+          </button>
           </div>
         </div>
       </header>
@@ -106,13 +114,7 @@ const Dashboard = () => {
           >
             End Day & Save Score
           </button>
-          <button
-            onClick={freshStart}
-            className="px-4 py-3 rounded-xl bg-muted text-muted-foreground hover:text-destructive transition-colors"
-            title="Fresh Start Protocol"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
+          
         </div>
       </main>
     </div>
