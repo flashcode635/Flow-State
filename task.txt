@@ -1,0 +1,6 @@
+* prisma schema
+* posgrsql db connection
+* writes and updates in db
+* auth (next-auth, google auth)
+* emailjs -> email notification sent
+* notifications on mobiles (if possible)

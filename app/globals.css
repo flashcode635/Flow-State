@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Hex Codes - v4 automatically handles opacity when defined this way */
+  --color-background: #0e1217;
+  --color-foreground: #f2f0ed;
+
+  --color-card: #15191f;
+  --color-card-foreground: #f2f0ed;
+
+  --color-popover: #1a1f26;
+  --color-popover-foreground: #f2f0ed;
+
+  --color-primary: #f59e0b;
+  --color-primary-foreground: #0e1217;
+
+  --color-secondary: #21262d;
+  --color-secondary-foreground: #cbd5e1;
+
+  --color-muted: #1d2127;
+  --color-muted-foreground: #717d8a;
+
+  --color-accent: #ea580c;
+  --color-accent-foreground: #fafafa;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f8fafc;
+
+  --color-border: #272e37;
+  --color-input: #232931;
+  --color-ring: #f59e0b;
+
+  --radius-xl: 0.75rem;
+
+  --color-success: #22c55e;
+  --color-success-foreground: #f0fdf4;
+  --color-warning: #eab308;
+  --color-warning-foreground: #422006;
+  --color-streak: #f59e0b;
+
+  /* Glass and Glows */
+  --color-glass: #15191fb3; /* 70% opacity hex */
+  --color-glass-border: #333d4980; /* 50% opacity hex */
+  
+  /* Shadows must be defined manually or via utility */
+  --shadow-glow-primary: 0 0 40px rgba(245, 158, 11, 0.15), 0 0 80px rgba(245, 158, 11, 0.15);
+  --shadow-glow-success: 0 0 30px rgba(34, 197, 94, 0.15);
+
+  /* Sidebar */
+  --color-sidebar-background: #0f1216;
+  --color-sidebar-foreground: #cbd5e1;
+  --color-sidebar-primary: #f59e0b;
+  --color-sidebar-primary-foreground: #0e1217;
+  --color-sidebar-accent: #21262d;
+  --color-sidebar-accent-foreground: #f2f0ed;
+  --color-sidebar-border: #272e37;
+  --color-sidebar-ring: #f59e0b;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-display);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+@utility glass-card {
+  @apply bg-card/70 backdrop-blur-xl border border-border/50 rounded-xl;
+}
+
+@utility glass-card-hover {
+  @apply glass-card transition-all duration-300 hover:border-primary/30 hover:shadow-glow-primary;
+}
+
+@utility text-gradient-primary {
+  @apply bg-clip-text text-transparent bg-linear-to-br from-primary to-accent;
+}
+
+@utility heatmap-cell {
+  @apply rounded-sm transition-all duration-200 hover:scale-150 hover:z-10;
+}
+
+.score-ring {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
