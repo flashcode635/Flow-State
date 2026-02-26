@@ -1,15 +1,141 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+
 }
 
-model User {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  password String
-  // tasks    Task[]
+// ============================================================================
+// USER MODEL
+// ============================================================================
+// Represents a registered user of the Routine Evaluator
+model user {
+  id            String  @id @default(cuid())
+  email         String  @unique
+  password      String
+  username      String
+  persona       String? // 'high-achiever' | 'burnout-recovery' | null
+  onboarded     Boolean @default(false)
+  currentStreak Int     @default(0)
+  longestStreak Int     @default(0)
+  failStreak    Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  templates      TaskTemplate[] 
+  instances      TaskInstance[]
+  historyRecords DayRecord[]
+
+  @@index([email])
 }
+
+// ============================================================================
+// TASK TEMPLATE MODEL
+// ============================================================================
+// Represents a recurring task/routine that a user can perform
+// Examples: "Morning Workout", "Water Intake", "Deep Work Block"
+model TaskTemplate {
+  id     String @id @default(cuid())
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Task properties
+  name     String // e.g., "Morning Workout"
+  type     String // 'boolean' | 'quantitative' | 'duration'
+  priority String // 'critical' | 'high' | 'medium' | 'low'
+  category String // 'Fitness', 'Health', 'Productivity', etc.
+
+  // Optional fields
+  target Int? // Goal value (reps for quantitative, seconds for duration)
+  unit   String? // 'glasses', 'reps', 'minutes', 'seconds', etc.
+
+  // Implementation intention (if-then pattern)
+  ifThenIf   String?
+  ifThenThen String?
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  instances TaskInstance[]
+
+  @@index([userId])
+}
+
+// ============================================================================
+// TASK INSTANCE MODEL
+// ============================================================================
+// Represents a specific task completion on a specific date
+// Each TaskTemplate can have multiple TaskInstances (one per day)
+model TaskInstance {
+  id         String       @id @default(cuid())
+  templateId String
+  template   TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  // Tracking data
+  date        String // YYYY-MM-DD format
+  completed   Boolean // Is task marked as complete?
+  value       Int // Actual value: 0/1 for boolean, count for quantitative, seconds for duration
+  completedAt DateTime? // When was task completed/marked done
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      user?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  @@unique([templateId, date]) // Only one instance per task per day
+  @@index([templateId])
+  @@index([date])
+}
+
+// ============================================================================
+// DAY RECORD MODEL
+// ============================================================================
+// Daily summary of user performance - created at end of day
+// Contains aggregated metrics: score, completion count, etc.
+model DayRecord {
+  id     String @id @default(cuid())
+  userId String
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Summary data
+  date           String // YYYY-MM-DD format
+  score          Int // 0-100, calculated based on weighted task completion
+  tasksCompleted Int // How many tasks were completed (boolean count)
+  totalTasks     Int // Total available tasks that day
+
+  // Metadata
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date]) // One record per user per day
+  @@index([userId])
+  @@index([date])
+}
+
+// ============================================================================
+// SCORE CALCULATION REFERENCE
+// ============================================================================
+// Daily Score = (Earned Weight / Total Weight) * 100
+// 
+// Priority Weights:
+//   - critical: 4   (40% contribution when all equal weight)
+//   - high: 3       (30% contribution)
+//   - medium: 2     (20% contribution)
+//   - low: 1        (10% contribution)
+//
+// Completion Rules:
+//   - Boolean tasks: 0 or 1 (earned weight if value == 1)
+//   - Quantitative/Duration: Partial credit if value < target
+//     Example: 6/8 glasses = 75% of that task's weight
+//
+// Thresholds:
+//   - Score >= 60: Day counts toward currentStreak
+//   - Score < 60: currentStreak reset to 0, failStreak incremented
+//   - failStreak >= 3: shouldScaleDown() returns true
+// ============================================================================

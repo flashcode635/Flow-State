@@ -1,28 +1,26 @@
-import { UserData } from "@/app/types/types";
-import { NextRequest, NextResponse } from "next/server";
+// app/api/(auth)/signin/route.ts
+import { prisma } from "@/app/lib/prismaDb";
+import { registerUser } from "@/app/lib/hash";
 
 export async function POST(request: Request) {
   try {
-    const body:UserData = await request.json(); // Parse incoming JSON
+    const body = await request.json();
+    const passwordHash = await registerUser(body.password);
     
-    // Logic: Database insertion or processing here
-    
-    return NextResponse.json({ 
-        received: body,
-        message: "Resource Created" ,
-        date: new Date().toISOString()
-        }, { 
-            status: 201
-         }
-    );
-    
-  } catch (error) {
-    return NextResponse.json(
-        { error: "Invalid JSON",
-        date: new Date().toISOString()
+    const user = await prisma.user.create({
+      data: {
+        email: body.email,
+        password: passwordHash,
+        username: body.username, // Mapping 'name' from request to 'username' in DB
+      },
+    });
 
-         },
-        { status: 400 }
-    );
+    return Response.json(user);
+  } catch (error: any) {
+    console.error("Auth Error:", error.message);
+    return Response.json({ 
+      error: error.message,
+      date: new Date().toISOString()
+    }, { status: 500 });
   }
 }

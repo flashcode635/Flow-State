@@ -8,18 +8,19 @@ import Heatmap from '@/app/components/Heatmap';
 import CommandPalette from '@/app/components/CommandPalette';
 import AddTaskDialog from '@/app/components/AddTaskDialog';
 import { useState } from 'react';
+import { Dialogbox } from './dialogbox';
 
 const Dashboard = () => {
   const { templates, getTodayInstances, getDailyScore, currentStreak, longestStreak, shouldScaleDown, freshStart, endDay } = useRoutineStore();
   const todayTasks = getTodayInstances();
   const score = getDailyScore();
   const completedCount = todayTasks.filter((t:any) => t.completed).length;
-  const [addOpen, setAddOpen] = useState(false);
+
 
   return (
     <div className="min-h-screen bg-background">
       <CommandPalette />
-      <AddTaskDialog open={addOpen} onOpenChange={setAddOpen} />
+      
 
       {/* Header or buttonsbar*/}
       <header className="border-b border-border/50 backdrop-blur-xl bg-background/80 sticky top-0 z-40">
@@ -30,12 +31,14 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-3">
             <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground font-mono hidden sm:inline">⌘K</kbd>
-            <button
+
+            {/* <button
               onClick={() => setAddOpen(true)}
               className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
             >
               <Plus className="w-4 h-4" />
-            </button>
+            </button> */}
+            <Dialogbox/>
             <button
             onClick={freshStart}
             className="px-2 py-2 rounded-xl bg-muted flex self-end text-muted-foreground hover:text-destructive transition-colors"

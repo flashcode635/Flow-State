@@ -39,18 +39,21 @@ const AddTaskDialog = ({ open, onOpenChange }: AddTaskDialogProps) => {
   return (
     <AnimatePresence>
       {open && (
-        <>
+      <>
+        <div >
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-background/90 backdrop-blur-sm z-50 "
             onClick={() => onOpenChange(false)}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-[10%] left-1/2 -translate-x-1/2 w-full max-w-md z-50 glass-card p-6 shadow-2xl"
-          >
+            className="fixed top-[10%] left-1/2 -translate-x-1/2 w-[90vw] max-w-screen h-screen z-50 glass-card p-6 shadow-2xl bg-background/90 mt-3"
+          >  
+          <div  className="fixed top-[1%] left-1/2 -translate-x-1/2 w-full max-w-md z-50 glass-card p-6 shadow-2xl bg-black mt-3">
+
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-foreground">New Task</h2>
               <button onClick={() => onOpenChange(false)} className="text-muted-foreground hover:text-foreground">
@@ -127,7 +130,7 @@ const AddTaskDialog = ({ open, onOpenChange }: AddTaskDialogProps) => {
                   <input
                     value={thenText} onChange={e => setThenText(e.target.value)}
                     placeholder="Then I will..."
-                    className="flex-1 px-3 py-2 rounded-lg bg-muted text-foreground placeholder:text-muted-foreground outline-none text-sm border border-border focus:border-primary/50 transition-colors"
+                    className="flex-1 px-1 py-2 rounded-lg bg-muted text-foreground placeholder:text-muted-foreground outline-none text-sm border border-border focus:border-primary/50 transition-colors"
                   />
                 </div>
               </div>
@@ -140,8 +143,10 @@ const AddTaskDialog = ({ open, onOpenChange }: AddTaskDialogProps) => {
                 Add Task
               </button>
             </div>
+          </div>
           </motion.div>
-        </>
+        </div>
+      </>
       )}
     </AnimatePresence>
   );
