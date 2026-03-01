@@ -45,7 +45,7 @@ const Dashboard = () => {
             title="Fresh Start Protocol"
           >
             {/* <RotateCcw className="w-4 h-4" /> */}
-            Sign Out
+            Reset
           </button>
           </div>
         </div>

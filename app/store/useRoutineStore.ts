@@ -207,7 +207,22 @@ export const useRoutineStore = create<RoutineStore>()(
         const newStreak = isSuccess ? state.currentStreak + 1 : 0;
         const newFailStreak = isSuccess ? 0 : state.failStreak + 1;
 
+        // Reset today's task instances to prepare for next day
+        // Clear completed status and reset values for today's tasks
+        const resetInstances = state.instances.map(instance => {
+          if (instance.date === date) {
+            return {
+              ...instance,
+              completed: false,
+              value: 0,
+              completedAt: undefined,
+            };
+          }
+          return instance;
+        });
+
         set(s => ({
+          instances: resetInstances,
           history: [...s.history.filter(h => h.date !== date), record],
           currentStreak: newStreak,
           longestStreak: Math.max(s.longestStreak, newStreak),
