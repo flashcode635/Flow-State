@@ -9,7 +9,7 @@ const Heatmap = () => {
     const today = new Date();
     const days: { date: string; score: number }[] = [];
     
-    for (let i = 83; i >= 0; i--) {
+    for (let i = 0; i <=83; i++) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
@@ -21,11 +21,11 @@ const Heatmap = () => {
 
   const getColor = (score: number) => {
     if (score < 0) return 'bg-muted/30';
-    if (score === 0) return 'bg-muted';
-    if (score < 30) return 'bg-destructive/40';
-    if (score < 50) return 'bg-warning/30';
-    if (score < 70) return 'bg-primary/40';
-    if (score < 90) return 'bg-primary/70';
+    else if (score === 0) return 'bg-muted';
+    else if (score < 30) return 'bg-destructive/40';
+    else if (score < 50) return 'bg-warning/30';
+    else if (score < 70) return 'bg-primary/40';
+    else if (score < 90) return 'bg-primary/70';
     return 'bg-success';
   };
 

@@ -9,7 +9,7 @@ datasource db {
 // ============================================================================
 // USER MODEL
 // ============================================================================
-// Represents a registered user of the Routine Evaluator
+// Represents a registered user of the Flow State
 model user {
   id            String  @id @default(cuid())
   email         String  @unique
@@ -25,9 +25,9 @@ model user {
   updatedAt DateTime @updatedAt
 
   // Relations
-  templates      TaskTemplate[] 
-  instances      TaskInstance[]
-  historyRecords DayRecord[]
+  templates      taskTemplate[]
+  instances      taskInstance[]
+  historyRecords dayRecord[]
 
   @@index([email])
 }
@@ -37,7 +37,7 @@ model user {
 // ============================================================================
 // Represents a recurring task/routine that a user can perform
 // Examples: "Morning Workout", "Water Intake", "Deep Work Block"
-model TaskTemplate {
+model taskTemplate {
   id     String @id @default(cuid())
   userId String
   user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -61,7 +61,7 @@ model TaskTemplate {
   updatedAt DateTime @updatedAt
 
   // Relations
-  instances TaskInstance[]
+  instances taskInstance[]
 
   @@index([userId])
 }
@@ -71,10 +71,10 @@ model TaskTemplate {
 // ============================================================================
 // Represents a specific task completion on a specific date
 // Each TaskTemplate can have multiple TaskInstances (one per day)
-model TaskInstance {
+model taskInstance {
   id         String       @id @default(cuid())
   templateId String
-  template   TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  template   taskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   // Tracking data
   date        String // YYYY-MM-DD format
@@ -98,7 +98,7 @@ model TaskInstance {
 // ============================================================================
 // Daily summary of user performance - created at end of day
 // Contains aggregated metrics: score, completion count, etc.
-model DayRecord {
+model dayRecord {
   id     String @id @default(cuid())
   userId String
   user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)

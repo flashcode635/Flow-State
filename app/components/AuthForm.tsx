@@ -25,20 +25,35 @@ export default function AuthForm({ type }: AuthFormProps) {
 
     startTransition(async () => {
       try {
-        const endpoint = type === 'signin' ? '/api/signin' : '/api/signup';
-        const payload = type === 'signin' 
-          ? { email: formData.email, password: formData.password }
-          : { 
-              username: formData.username, 
-              email: formData.email, 
-              password: formData.password 
-            };
+        if (type === 'signup') {
+          // Handle signup - save to database first
+          const signupResponse = await axios.post('/api/signup', {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password
+          });
+          
+          if (signupResponse.status === 201) {
+            // Signup successful - redirect to signin
+            router.push('/signin');
+            return;
+          }
+          
+          // Handle signup error
+          const errorMessage = signupResponse.data?.error || "Signup failed";
+          setError(errorMessage);
+          return;
+        }
 
-        const response = await axios.post(endpoint, payload);
+        // Handle signin
+        const signinResponse = await axios.post('/api/signin', {
+          email: formData.email,
+          password: formData.password
+        });
         
-        if (response.status === 200) {
-          // Redirecting to the dashboard of user
-         router.push(`/${response.data.user.id}/dashboard`);
+        if (signinResponse.status === 200) {
+          // Redirecting to dashboard of user
+          router.push(`/${signinResponse.data.user.id}/dashboard`);
         }
       } catch (err: any) {
         const errorMessage = err.response?.data?.error || err.message || "Authentication failed";

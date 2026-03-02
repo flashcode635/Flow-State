@@ -9,7 +9,7 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Flame className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">Routine Evaluator</span>
+            <span className="text-2xl font-bold text-foreground">Flow State</span>
           </div>
           <p className="text-muted-foreground">Sign in to track your daily progress</p>
         </div>

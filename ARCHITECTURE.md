@@ -1,4 +1,4 @@
-# Routine Evaluator - Architecture & Data Flow Diagrams
+# Flow State - Architecture & Data Flow Diagrams
 
 ## 1. Entity Relationship Diagram (ERD)
 
