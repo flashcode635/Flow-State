@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react";
-import AddTaskDialog from "./AddTaskDialog";
+
 import { Plus } from "lucide-react";
+import AddTaskDialog from "./Dialog";
 
 export const Dialogbox=()=>{
       const [addOpen, setAddOpen] = useState(false);

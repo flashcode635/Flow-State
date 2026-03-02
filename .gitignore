@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 task.txt
+removed.txt
 task-progress.txt
 # testing
 /coverage
