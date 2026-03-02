@@ -37,10 +37,10 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-6">
               <Link href="#features" className="text-gray-300 hover:text-orange-400 transition-colors">Features</Link>
               <Link href="#testimonials" className="text-gray-300 hover:text-orange-400 transition-colors">Testimonials</Link>
-              <Link href="#pricing" className="text-gray-300 hover:text-orange-400 transition-colors">Pricing</Link>
+              {/* <Link href="#pricing" className="text-gray-300 hover:text-orange-400 transition-colors">Pricing</Link> */}
             </div>
             <div className="flex items-center gap-3">
-              <Link href="/signin" className="text-gray-300 hover:text-orange-400 transition-colors">Sign In</Link>
+              {/* <Link href="/signin" className="text-gray-300 hover:text-orange-400 transition-colors">Sign In</Link> */}
               <Link href="/signup" className="px-4 py-2 bg-linear-to-r from-orange-500 to-amber-600 text-white rounded-lg hover:from-orange-600 hover:to-amber-700 transition-all transform hover:scale-105">
                 Get Started
               </Link>
