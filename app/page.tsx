@@ -85,7 +85,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
-              <span>14-day free trial</span>
+              <span>Exclusive early access</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
