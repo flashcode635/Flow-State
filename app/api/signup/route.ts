@@ -40,10 +40,11 @@ export async function POST(request: Request) {
         error: "User with this email already exists" 
       }, { status: 409 });
     }
-    
-    return Response.json({ 
-      error: error.message || "Internal server error",
-      date: new Date().toISOString()
-    }, { status: 500 });
+    else{
+      return Response.json({ 
+        error: "Signup Failed: Internal server error",
+        date: new Date().toISOString()
+      }, { status: 500 });
+    }
   }
 }

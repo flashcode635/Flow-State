@@ -275,14 +275,14 @@ Future: Prisma ORM → PostgreSQL
 
 ```typescript
 interface UserState {
-  persona: 'high-achiever' | 'burnout-recovery' | null
-  onboarded: boolean
-  templates: TaskTemplate[]      // Recurring tasks
-  instances: TaskInstance[]      // Daily completions
-  history: DayRecord[]          // Daily summaries
-  currentStreak: number
-  longestStreak: number
-  failStreak: number
+  persona: "high-achiever" | "burnout-recovery" | null;
+  onboarded: boolean;
+  templates: TaskTemplate[]; // Recurring tasks
+  instances: TaskInstance[]; // Daily completions
+  history: DayRecord[]; // Daily summaries
+  currentStreak: number;
+  longestStreak: number;
+  failStreak: number;
 }
 ```
 
@@ -299,6 +299,7 @@ interface UserState {
 **Focus**: Productivity, fitness, learning
 
 **Default Tasks**:
+
 - Morning Workout (45 min) - **High Priority**
 - Deep Work Block (90 min) - **Critical Priority**
 - Water Intake (8 glasses) - **Medium Priority**
@@ -317,6 +318,7 @@ interface UserState {
 **Focus**: Self-care, movement, mindfulness
 
 **Default Tasks**:
+
 - Gentle Walk (15 min) - **Medium Priority**
 - Hydrate (6 glasses) - **High Priority**
 - Screen-Free Hour - **High Priority**
@@ -329,11 +331,11 @@ interface UserState {
 ### Priority Weights
 
 | Priority | Weight | Impact on Score |
-|----------|--------|----------------|
-| Critical | 4      | 40%            |
-| High     | 3      | 30%            |
-| Medium   | 2      | 20%            |
-| Low      | 1      | 10%            |
+| -------- | ------ | --------------- |
+| Critical | 4      | 40%             |
+| High     | 3      | 30%             |
+| Medium   | 2      | 20%             |
+| Low      | 1      | 10%             |
 
 ### Score Calculation
 
@@ -379,7 +381,7 @@ model user {
   failStreak    Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  
+
   templates      taskTemplate[]
   instances      taskInstance[]
   historyRecords dayRecord[]
@@ -402,7 +404,7 @@ model taskTemplate {
   ifThenThen String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  
+
   instances  taskInstance[]
 }
 ```
@@ -419,7 +421,7 @@ model taskInstance {
   completedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  
+
   @@unique([templateId, date])
 }
 ```
@@ -435,7 +437,7 @@ model dayRecord {
   tasksCompleted Int
   totalTasks     Int
   createdAt      DateTime @default(now())
-  
+
   @@unique([userId, date])
 }
 ```
@@ -500,6 +502,7 @@ npx prisma migrate reset
 ### Code Style
 
 This project uses:
+
 - **ESLint** for code linting
 - **TypeScript** for type checking
 - **Prettier** (configured in ESLint)
@@ -520,6 +523,7 @@ This project uses:
 ### Database Setup
 
 For production, use:
+
 - [Neon](https://neon.tech/) - Serverless PostgreSQL
 - [Supabase](https://supabase.com/) - PostgreSQL + Auth
 - [Railway](https://railway.app/) - PostgreSQL hosting

@@ -53,7 +53,7 @@ export default function AuthForm({ type }: AuthFormProps) {
         
         if (signinResponse.status === 200) {
           // Redirecting to dashboard of user
-          router.push(`/${signinResponse.data.user.id}/dashboard`);
+          router.push(`/dashboard`);
         }
       } catch (err: any) {
         const errorMessage = err.response?.data?.error || err.message || "Authentication failed";

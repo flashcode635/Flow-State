@@ -1,25 +1,39 @@
 "use client"
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, TrendingDown, AlertTriangle } from 'lucide-react';
-import { useParams } from 'next/navigation';
 import { useRoutineStore } from '@/app/store/useRoutineStore';
 import ScoreRing from '@/app/components/ScoreRing';
 import TaskCard from '@/app/components/TaskCard';
 import Heatmap from '@/app/components/Heatmap';
 import CommandPalette from '@/app/components/CommandPalette';
 import { Dialogbox } from './dialogbox';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Dashboard = () => {
-  const params = useParams();
-  const userId = params.userId as string;
   const { templates, getTodayInstances, getDailyScore, currentStreak, longestStreak, shouldScaleDown, freshStart, endDay } = useRoutineStore();
   const todayTasks = getTodayInstances();
   const score = getDailyScore();
   const completedCount = todayTasks.filter((t:any) => t.completed).length;
   const [isEndingDay, setIsEndingDay] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/me');
+        if (res.ok) {
+          const data = await res.json();
+          setUserId(data.user.id);
+        }
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleEndDay = async () => {
+    if (!userId) return;
     setIsEndingDay(true);
     try {
       // Get current state
