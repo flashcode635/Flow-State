@@ -627,10 +627,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - Icons by [Lucide](https://lucide.dev/)
 - Inspired by habit tracking psychology and behavioral science
 
----
 
-## 📧 Contact
-
-For questions or support, please open an issue on GitHub or contact to us.
-
----
