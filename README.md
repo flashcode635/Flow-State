@@ -72,6 +72,16 @@
 - **Burnout Recovery**: 4 gentle tasks for sustainable rebuilding
 - Pre-configured templates with psychology-backed defaults
 
+### 🔐 Production-Ready Authentication
+
+- **Session-based authentication**: Secure token-based sessions instead of credential-only auth
+- **HTTP-only, Secure cookies**: Prevents XSS attacks and ensures secure transmission
+- **Session hashing**: Uses bcrypt to hash session tokens before storing in database
+- **Session expiration**: 7-day absolute expiration with sliding expiration for active sessions
+- **Protected routes**: Middleware ensures only authenticated users can access private pages
+- **Audit logging**: Tracks login/logout events and session creation/expiration
+- **Secure logout**: Invalidates sessions both server-side and client-side
+
 ### 🎨 Modern UI/UX
 
 - Dark mode with amber/orange accent theme
@@ -203,9 +213,11 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 flow-state/
 ├── app/
 │   ├── api/                    # API routes
-│   │   └── (auth)/            # Authentication endpoints
-│   │       ├── signin/        # Sign in route
-│   │       └── signup/        # Sign up route
+│   │   ├── signin/            # Sign in endpoint
+│   │   ├── signup/            # Sign up endpoint
+│   │   ├── logout/            # Logout endpoint
+│   │   ├── me/                # Get current user endpoint
+│   │   └── endDay/            # End day and save score
 │   ├── components/            # React components
 │   │   ├── ui/               # Reusable UI components (Radix UI)
 │   │   ├── AuthForm.tsx      # Authentication form
@@ -221,6 +233,7 @@ flow-state/
 │   │   ├── use-mobile.tsx    # Mobile detection hook
 │   │   └── use-toast.ts      # Toast notification hook
 │   ├── lib/                  # Utility libraries
+│   │   ├── auth.ts           # Authentication utilities (sessions, cookies)
 │   │   ├── prismaDb.ts       # Prisma client singleton
 │   │   ├── schema.ts         # Zod validation schemas
 │   │   └── utils.ts          # Helper functions
@@ -229,21 +242,29 @@ flow-state/
 │   ├── types/                # TypeScript type definitions
 │   │   ├── routine.ts        # Core routine types
 │   │   └── types.ts          # Auth & utility types
+│   ├── dashboard/            # Dashboard page (protected)
+│   │   └── page.tsx
+│   ├── signin/               # Sign in page
+│   │   └── page.tsx
+│   ├── signup/               # Sign up page
+│   │   └── page.tsx
 │   ├── globals.css           # Global styles
 │   ├── layout.tsx            # Root layout component
 │   ├── page.tsx              # Landing page
 │   └── not-found.tsx         # 404 page
 ├── prisma/
-│   └── schema.prisma         # Prisma database schema
+│   ├── schema.prisma         # Prisma database schema
+│   └── migrations/          # Database migrations
 ├── public/                   # Static assets
 ├── ARCHITECTURE.md           # Detailed architecture documentation
 ├── SCHEMA.md                 # Data models and schema reference
-├── .env.example              # Environment variables template
+├── sample.env                # Environment variables template
 ├── eslint.config.mjs         # ESLint configuration
 ├── next.config.ts            # Next.js configuration
 ├── package.json              # Dependencies and scripts
 ├── postcss.config.mjs        # PostCSS configuration
 ├── prisma.config.ts          # Prisma configuration
+├── middleware.ts             # Next.js middleware (route protection)
 ├── tailwind.config.ts        # Tailwind CSS configuration
 └── tsconfig.json             # TypeScript configuration
 ```
@@ -439,6 +460,39 @@ model dayRecord {
   createdAt      DateTime @default(now())
 
   @@unique([userId, date])
+}
+```
+
+### Session Model
+
+```prisma
+model session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+```
+
+### AuditLog Model
+
+```prisma
+model auditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String   // 'LOGIN_SUCCESS' | 'LOGIN_FAILURE' | 'LOGOUT' | 'SESSION_CREATED' | 'SESSION_EXPIRED'
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }
 ```
 
